@@ -7,6 +7,8 @@ struct doubleVector vectorAlloc(int length) {
   struct doubleVector dv;
   dv.length = length;
   dv.data = malloc(length * sizeof(double));
+
+  return dv;
 }
 
 struct doubleVector randomVector(int length) {
@@ -17,6 +19,15 @@ struct doubleVector randomVector(int length) {
     int r2 = rand();
     dv.data[i] = (double) r1 / (double) r2;
   }
+
+  return dv;
+}
+
+struct doubleVector vectorClone(const struct doubleVector * original) {
+  struct doubleVector dv = vectorAlloc(original->length);
+  vectorizedCopy(original->data, dv.data, original->length);
+
+  return dv;
 }
 
 void vectorDisplay(const struct doubleVector * vec) {
