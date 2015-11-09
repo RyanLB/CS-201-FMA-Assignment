@@ -21,7 +21,7 @@ int main(int argc, char ** argv) {
   for(int i = 0; i < length; ++i) {
     a.data[i] = strtod(argv[firstIndex++], NULL);
     b.data[i] = strtod(argv[secondIndex++], NULL);
-    b.data[i] = strtod(argv[thirdIndex++], NULL);
+    c.data[i] = strtod(argv[thirdIndex++], NULL);
 
     // Check validity of arguments
     if (a.data[i] == 0.0 || b.data[i] == 0.0 || c.data[i] == 0.0) {
