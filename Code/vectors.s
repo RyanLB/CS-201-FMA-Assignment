@@ -1,5 +1,5 @@
-.globl vectorizedCopy
-vectorizedCopy:
+.globl vectorized_copy
+vectorized_copy:
   pushq %rbp
   movq  %rsp, %rbp
 

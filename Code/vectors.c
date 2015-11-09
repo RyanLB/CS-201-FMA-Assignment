@@ -1,9 +1,10 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 
 #include "vectors.h"
 
-struct doubleVector vectorAlloc(int length) {
+struct doubleVector vector_alloc(int length) {
   struct doubleVector dv;
   dv.length = length;
   dv.data = malloc(length * sizeof(double));
@@ -11,8 +12,8 @@ struct doubleVector vectorAlloc(int length) {
   return dv;
 }
 
-struct doubleVector randomVector(int length) {
-  struct doubleVector dv = vectorAlloc(length);
+struct doubleVector random_vector(int length) {
+  struct doubleVector dv = vector_alloc(length);
 
   for(int i = 0; i < length; ++i) {
     int r1 = rand();
@@ -23,14 +24,14 @@ struct doubleVector randomVector(int length) {
   return dv;
 }
 
-struct doubleVector vectorClone(const struct doubleVector * original) {
-  struct doubleVector dv = vectorAlloc(original->length);
-  vectorizedCopy(original->data, dv.data, original->length);
+struct doubleVector vector_clone(const struct doubleVector * original) {
+  struct doubleVector dv = vector_alloc(original->length);
+  vectorized_copy(original->data, dv.data, original->length);
 
   return dv;
 }
 
-void vectorDisplay(const struct doubleVector * vec) {
+void vector_display(const struct doubleVector * vec) {
   int length = vec->length;
 
   printf("[");
@@ -41,4 +42,23 @@ void vectorDisplay(const struct doubleVector * vec) {
     printf("%f", vec->data[length - 1]);
   }
   printf("]");
+}
+
+bool scalar_fma(struct doubleVector * a,
+                const struct doubleVector * b,
+                const struct doubleVector * c) {
+  int length = a->length;
+  if (b->length != length || c->length != length) {
+    return false;
+  }
+
+  double * a_data = a->data;
+  double * b_data = b->data;
+  double * c_data = c->data;
+
+  for(int i = 0; i < length; ++i) {
+    a_data[i] += b_data[i] * c_data[i];
+  }
+
+  return true;
 }

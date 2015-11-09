@@ -6,13 +6,13 @@
 
 int main(void) {
   srand(time(NULL));
-  struct doubleVector v1 = randomVector(5);
-  struct doubleVector v2 = vectorClone(&v1);
+  struct doubleVector v1 = random_vector(5);
+  struct doubleVector v2 = vector_clone(&v1);
 
   printf("V1: ");
-  vectorDisplay(&v1);
+  vector_display(&v1);
   printf("\nV2: ");
-  vectorDisplay(&v2);
+  vector_display(&v2);
   printf("\n");
 
   free(v1.data);
