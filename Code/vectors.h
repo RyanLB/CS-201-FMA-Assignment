@@ -27,4 +27,7 @@ bool vectorized_fma(struct doubleVector * a,
                     const struct doubleVector * b,
                     const struct doubleVector * c);
 
+// Helper function to get cycle count
+int rdtsc(void);
+
 #endif

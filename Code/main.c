@@ -17,7 +17,7 @@ int perfTest(struct doubleVector *a,
                          const struct doubleVector *));
 
 int main(void) {
-  testWithLength(9999999); 
+  testWithLength(10000000); 
 }
 
 /*
@@ -42,7 +42,7 @@ bool testWithLength(int length) {
   // Test scalar performance 
   //printf("Scalar result: ");
   //vector_display(&a);
-  printf("\nScalar time (usecs): %d\n", perfTest(&a, &b, &c, scalar_fma));
+  printf("\nScalar cycle count: %d\n", perfTest(&a, &b, &c, scalar_fma));
  
   // Test vector performance
   //printf("Vector result: ");
@@ -71,16 +71,8 @@ int perfTest(struct doubleVector *a,
                         const struct doubleVector *,
                         const struct doubleVector *)) {
   
-
-  // Structs to measure function performance
-  struct timeval start;
-  struct timeval end;
-  struct timeval diff;
-
-  gettimeofday(&start, NULL);
+  int startCycles = rdtsc();
   fma(a, b, c);
-  gettimeofday(&end, NULL);
-  timersub(&end, &start, &diff);
-  printf("\n%d secs + %d usecs\n");
-  return diff.tv_usec;
+  int endCycles = rdtsc();
+  return endCycles - startCycles;
 }

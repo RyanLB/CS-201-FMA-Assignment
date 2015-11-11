@@ -100,3 +100,10 @@ retTrue:
 retFalse:
   movq  $0, %rax
   ret
+
+.globl rdtsc
+rdtsc:
+  rdtsc
+  shlq  $32,  %rdx
+  addq  %rdx, %rax
+  ret
