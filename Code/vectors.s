@@ -1,14 +1,12 @@
 .globl vectorized_copy
 vectorized_copy:
-  pushq %rbp
-  movq  %rsp, %rbp
-
   cmpq  $4, %rdx
   jl    above2
   
   movq  %rdx, %rcx
   shrq  $2,   %rcx
-  leaq  (%rdx, %rcx, 4),  %rdx  
+  leaq  (, %rcx, 4),  %rax
+  subq  %rax, %rdx
 multsOf4:
   vmovupd  (%rdi), %ymm0
   vmovupd  %ymm0,  (%rsi)
@@ -34,5 +32,71 @@ checkOdd:
   movsd %xmm0,  (%rsi)
 
 done:
-  leave
+  ret
+
+
+.globl vectorized_compare
+vectorized_compare:
+  cmpq  $4, %rdx
+  jl    cmpAbove2
+  
+  movq  %rdx, %rcx
+  shrq  $2,   %rcx
+  leaq  (, %rcx, 4),  %rax
+  subq  %rax, %rdx
+cmpMultsOf4:
+  # Move four doubles from v1 and four doubles from v2 into %ymm0 and %ymm1, respectively
+  vmovupd  (%rdi),  %ymm0
+  vmovupd  (%rsi),  %ymm1
+
+  # Compare all four doubles at a time. If a pair of doubles matches, the corresponding bits in
+  # %ymm2 will all be set
+  vcmppd  $0, %ymm0, %ymm1, %ymm2
+
+  # Move the sign bit from each double in %ymm2 into the lower four bits of %eax and check to ensure
+  # that they are all set
+  vmovmskpd %ymm2,  %rax
+  cmpq  $15,  %rax
+  jne   retFalse
+
+  # Increment pointers appropriately
+  addq  $32,  %rdi
+  addq  $32,  %rsi
+  loop  multsOf4
+
+cmpAbove2:
+  cmpq  $2, %rdx
+  jb    checkOdd
+
+  vmovupd (%rdi), %xmm0
+  vmovupd (%rsi), %xmm1
+
+  vcmppd  $0, %xmm0, %xmm1, %xmm2
+
+  vmovmskpd %xmm2,  %rax
+  cmpq  $3, %rax
+  jne   retFalse
+
+  addq  $16,  %rdi
+  addq  $16,  %rsi
+
+  subq  $2, %rdx
+cmpCheckOdd:
+  cmpq  $0, %rdx
+  je    retTrue
+
+  movsd (%rdi), %xmm0
+  cmpsd $0, (%rsi), %xmm0
+  movmskpd  %xmm0,  %rax
+  andq  $1, %rax
+  cmpq  $1, %rax
+  jne   retFalse
+
+  # If we got this far, return true
+retTrue:
+  movq  $1, %rax
+  ret
+
+retFalse:
+  movq  $0, %rax
   ret

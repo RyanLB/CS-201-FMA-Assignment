@@ -62,3 +62,12 @@ bool scalar_fma(struct doubleVector * a,
 
   return true;
 }
+
+bool vector_compare(const struct doubleVector * v1, const struct doubleVector * v2) {
+  int length = v1->length;
+  if (v2->length != length) {
+    return false;
+  }
+
+  return vectorized_compare(v1->data, v2->data, length);
+}
