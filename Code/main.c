@@ -40,14 +40,10 @@ bool testWithLength(int length) {
   
  
   // Test scalar performance 
-  //printf("Scalar result: ");
-  //vector_display(&a);
   printf("\nScalar cycle count: %d\n", perfTest(&a, &b, &c, scalar_fma));
  
   // Test vector performance
-  //printf("Vector result: ");
-  //vector_display(&a2);
-  //printf("\nVector time (seconds): %lf\n", diff.tv_sec + (double)diff.tv_usec / 1000000);
+  printf("\nVector cycle count: %d\n", perfTest(&a2, &b2, &c2, vector_fma));
 
   // Compare results
   bool correct = vectorized_compare(a.data, a2.data, length);

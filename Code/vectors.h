@@ -1,6 +1,8 @@
 #ifndef _RYAN_VEC
 #define _RYAN_VEC
 
+#include <stdlib.h>
+
 struct doubleVector {
   size_t length;
   double * data;
@@ -23,9 +25,9 @@ bool scalar_fma(struct doubleVector * a,
                 const struct doubleVector * c);
 
 // A prototype for your code
-bool vectorized_fma(struct doubleVector * a,
-                    const struct doubleVector * b,
-                    const struct doubleVector * c);
+bool vector_fma(struct doubleVector * a,
+                const struct doubleVector * b,
+                const struct doubleVector * c);
 
 // Helper function to get cycle count
 int rdtsc(void);

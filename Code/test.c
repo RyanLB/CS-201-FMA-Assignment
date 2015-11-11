@@ -7,19 +7,34 @@
 
 int main(void) {
   srand(time(NULL));
-  struct doubleVector v1 = random_vector(5);
-  struct doubleVector v2 = vector_clone(&v1);
 
-  printf("V1: ");
-  vector_display(&v1);
-  printf("\nV2: ");
-  vector_display(&v2);
+  struct doubleVector a = vector_alloc(5);
+  struct doubleVector b = vector_alloc(5);
+  struct doubleVector c = vector_alloc(5);
+
+  for(int i = 0; i < 5; ++i) {
+    a.data[i] = 1.0;
+    b.data[i] = 2.0;
+    c.data[i] = 3.0;
+  }
+
+  struct doubleVector a2 = vector_clone(&a);
+  struct doubleVector b2 = vector_clone(&b);
+  struct doubleVector c2 = vector_clone(&c);
+
+  scalar_fma(&a, &b, &c);
+  printf("Scalar result: ");
+  vector_display(&a);
+
+  vector_fma(&a2, &b2, &c2);
+  printf("\nVector result: ");
+  vector_display(&a2);
   printf("\n");
 
-  printf("Comparison: %s\n", vector_compare(&v1, &v2) ? "true" : "false");
-  v1.data[0] += 5;
-  printf("Second comparison: %s\n", vector_compare(&v1, &v2) ? "true" : "false");
-
-  free(v1.data);
-  free(v2.data);
+  free(a.data);
+  free(b.data);
+  free(c.data);
+  free(a2.data);
+  free(b2.data);
+  free(c2.data);
 }
