@@ -6,8 +6,18 @@
 
 #include "vectors.h"
 
+bool testWithLength(int length);
+
+// This function prototype is the worst thing I have ever written
+int perfTest(struct doubleVector *a,
+              const struct doubleVector *b,
+              const struct doubleVector *c,
+              bool(*fma)(struct doubleVector *,
+                         const struct doubleVector *,
+                         const struct doubleVector *));
+
 int main(void) {
-  
+  testWithLength(9999999); 
 }
 
 /*
@@ -28,28 +38,16 @@ bool testWithLength(int length) {
   struct doubleVector b2 = vector_clone(&b);
   struct doubleVector c2 = vector_clone(&c);
   
-  // Structs to measure function performance
-  struct rusage start;
-  struct rusage end;
-  struct timeval diff;
  
   // Test scalar performance 
-  getrusage(RUSAGE_SELF, &start);
-  scalar_fma(&a, &b, &c);
-  getrusage(RUSAGE_SELF, &end);
-  timersub(&end, &start, &diff);
-  printf("Scalar result: ");
-  vector_display(&a);
-  printf("\nScalar time (seconds): %lf\n", diff.tv_sec + (double)diff.tv_usec / 1000000);
+  //printf("Scalar result: ");
+  //vector_display(&a);
+  printf("\nScalar time (usecs): %d\n", perfTest(&a, &b, &c, scalar_fma));
  
   // Test vector performance
-  getrusage(RUSAGE_SELF, &start);
-  vectorized_fma(&a2, &b2, &c2);
-  getrusage(RUSAGE_SELF, &end);
-  timersub(&end, &start, &diff);
-  printf("Vector result: ");
-  vector_display(&a2);
-  printf("\nVector time (seconds): %lf\n", diff.tv_sec + (double)diff.tv_usec / 1000000);
+  //printf("Vector result: ");
+  //vector_display(&a2);
+  //printf("\nVector time (seconds): %lf\n", diff.tv_sec + (double)diff.tv_usec / 1000000);
 
   // Compare results
   bool correct = vectorized_compare(a.data, a2.data, length);
@@ -63,4 +61,26 @@ bool testWithLength(int length) {
   free(c2.data);
 
   return correct;
+}
+
+// This function prototype is the worst thing I have ever written
+int perfTest(struct doubleVector *a,
+             const struct doubleVector *b,
+             const struct doubleVector *c,
+             bool(*fma)(struct doubleVector *,
+                        const struct doubleVector *,
+                        const struct doubleVector *)) {
+  
+
+  // Structs to measure function performance
+  struct timeval start;
+  struct timeval end;
+  struct timeval diff;
+
+  gettimeofday(&start, NULL);
+  fma(a, b, c);
+  gettimeofday(&end, NULL);
+  timersub(&end, &start, &diff);
+  printf("\n%d secs + %d usecs\n");
+  return diff.tv_usec;
 }
