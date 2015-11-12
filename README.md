@@ -13,7 +13,7 @@ This repo provides skeleton code for creating random vectors and testing the per
 
 ###What to Submit
 
-Your submission should be a single file with the title `<D2L username>.c`. This file should contain, at minimum, a function with the following signature:
+Your submission should be a single file with the title `submission.c`. This file should contain, at minimum, a function with the following signature:
 
 `bool vectorized_fma(const struct doubleVector * a, const struct doubleVector * b, const struct doubleVector * c)`
 
