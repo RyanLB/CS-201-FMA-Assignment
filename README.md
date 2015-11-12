@@ -17,7 +17,7 @@ Your submission should be a single file with the title `<D2L username>.c`. This 
 
 `bool vectorized_fma(const struct doubleVector * a, const struct doubleVector * b, const struct doubleVector * c)`
 
-This function should work with the provided `main.c` and `Makefile`; there is no need to write or include your own.
+This function should work with the provided `main.c` and `Makefile`; there is no need to write or include your own. The function also should not print output to the screen or take input from the user.
 
 The return value should indicate whether or not the computation was successful. The only case that I can think of off the top of my head that would cause this to fail is if the vectors had varying lengths.
 
