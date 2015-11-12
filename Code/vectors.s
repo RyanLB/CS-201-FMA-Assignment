@@ -101,6 +101,18 @@ retFalse:
   movq  $0, %rax
   ret
 
+.global scalar_fma_asm
+scalar_fma_asm:
+  movsd (%rdi), %xmm0
+  movsd (%rsi), %xmm1
+  movsd (%rdx), %xmm2
+  vfmadd132sd %xmm1, %xmm0,  %xmm2
+  movsd %xmm2,  (%rdi)
+  addq  $8, %rdi
+  addq  $8, %rsi
+  addq  $8, %rdx
+  loop scalar_fma_asm
+
 .globl rdtsc
 rdtsc:
   rdtsc

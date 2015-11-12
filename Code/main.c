@@ -46,7 +46,8 @@ bool testWithLength(int length) {
   printf("\nVector cycle count: %d\n", perfTest(&a2, &b2, &c2, vector_fma));
 
   // Compare results
-  bool correct = vectorized_compare(a.data, a2.data, length);
+  char * correct = vector_compare(&a, &a2) ? "MATCH" : "NO MATCH";
+  printf("%s\n", correct);
   
   // Free dynamic resources
   free(a.data);

@@ -24,6 +24,11 @@ bool scalar_fma(struct doubleVector * a,
                 const struct doubleVector * b,
                 const struct doubleVector * c);
 
+void scalar_fma_asm(double * a,
+                    const double * b,
+                    const double * c,
+                    int length);
+
 // A prototype for your code
 bool vector_fma(struct doubleVector * a,
                 const struct doubleVector * b,

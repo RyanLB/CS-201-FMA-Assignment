@@ -5,18 +5,29 @@
 
 #include "vectors.h"
 
-int main(void) {
+int main(int argc, char ** argv) {
   srand(time(NULL));
 
-  struct doubleVector a = vector_alloc(5);
-  struct doubleVector b = vector_alloc(5);
-  struct doubleVector c = vector_alloc(5);
+  int length = 5;
+  if (argc > 1) {
+    int newLength = atoi(argv[1]);
+    if (newLength > 0) {
+      length = newLength;
+    }
+  }
 
-  for(int i = 0; i < 5; ++i) {
+  struct doubleVector a = vector_alloc(length);
+  struct doubleVector b = vector_alloc(length);
+  struct doubleVector c = vector_alloc(length);
+
+  for(int i = 0; i < length; ++i) {
     a.data[i] = 1.0;
     b.data[i] = 2.0;
     c.data[i] = 3.0;
   }
+  a.data[0] = 2.1303856227531655;
+  b.data[0] = 2.4580704836593399;
+  c.data[0] = 1.1085901486833514;
 
   struct doubleVector a2 = vector_clone(&a);
   struct doubleVector b2 = vector_clone(&b);
@@ -30,6 +41,8 @@ int main(void) {
   printf("\nVector result: ");
   vector_display(&a2);
   printf("\n");
+
+  printf("%s\n", vector_compare(&a, &a2) ? "MATCH" : "NO MATCH");
 
   free(a.data);
   free(b.data);

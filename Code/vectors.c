@@ -52,13 +52,7 @@ bool scalar_fma(struct doubleVector * a,
     return false;
   }
 
-  double * a_data = a->data;
-  double * b_data = b->data;
-  double * c_data = c->data;
-
-  for(int i = 0; i < length; ++i) {
-    a_data[i] += b_data[i] * c_data[i];
-  }
+  scalar_fma_asm(a->data, b->data, c->data, length);
 
   return true;
 }
@@ -69,5 +63,12 @@ bool vector_compare(const struct doubleVector * v1, const struct doubleVector * 
     return false;
   }
 
-  return vectorized_compare(v1->data, v2->data, length);
+  for(int i = 0; i < length; ++i) {
+    if (v1->data[i] != v2->data[i]) {
+      return false;
+    }
+  }
+
+  return true;
+  //return vectorized_compare(v1->data, v2->data, length);
 }
