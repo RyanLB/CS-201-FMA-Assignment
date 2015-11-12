@@ -15,18 +15,25 @@ This repo provides skeleton code for creating random vectors and testing the per
 
 Your submission should be a single file with the title `<D2L username>.c`. This file should contain, at minimum, a function with the following signature:
 
-`void vectorized_fma(const struct doubleVector * a, const struct doubleVector * b, const struct doubleVector * c)`
+`bool vectorized_fma(const struct doubleVector * a, const struct doubleVector * b, const struct doubleVector * c)`
 
 This function should work with the provided `main.c` and `Makefile`; there is no need to write or include your own.
 
+The return value should indicate whether or not the computation was successful. The only case that I can think of off the top of my head that would cause this to fail is if the vectors had varying lengths.
+
 ###Grading Criteria
 
-// TODO
+Assignments will be evaluated based on the following criteria:
+* Your submission should use inline C and vector instructions
+* Your submission should calculate the same result as the included scalar implementation for vector sets with arbitrary (strictly positive) lengths
+* For a vector of length 10,000,000, your implementation should perform (at minimum) 20 times faster than the included scalar implementation.
 
-# Background: AVX2 and Vectorized Instructions
-
-// TODO
+If you'd like to try your code against the automated tests that they will be checked against, that code should be available as soon as it's finished here: https://github.com/RyanLB/CS-201-Public-Autograder-Tests
 
 #Notes and Hints
 
-// TODO
+To complete this assignment, you'll need to work on a processor that supports AVX2 instructions. I would recomment `linuxlab.cs.pdx.edu`, which is also where submissions will be tested.
+
+Included in the distribution code is a file called `vectors.s`. This file contains a couple of assembly routines which are used to copy and compare vectors of doubles. Looking at these may be helpful, as they contain usage examples of most – if not all – of the vector instructions you need.
+
+You may notice that the scalar implementation is also written in assembly, and uses the `vfmadd132sd` instruction. This is necessary because FMA instructions are [actually also more precise](https://en.wikipedia.org/wiki/Multiply–accumulate_operation) than a separate multiplication and addition, since we only need to round once. If you're attempting to debug your code in GDB or similar by checking its results against expressions like `a->data[0] + b->data[0] * c->data[0]`, you may notice minute differences in the smallest decimal digits; this is why.
