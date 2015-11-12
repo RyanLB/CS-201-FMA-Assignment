@@ -1,8 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdbool.h>
-#include <sys/time.h>
-#include <sys/resource.h>
+#include <time.h>
 
 #include "vectors.h"
 
@@ -17,6 +16,12 @@ int perfTest(struct doubleVector *a,
                          const struct doubleVector *));
 
 int main(void) {
+  srand(time(NULL));
+
+  for(int i = 1; i <= 10; ++i) {
+    testWithLength(i);
+  }
+
   testWithLength(10000000); 
 }
 
@@ -29,6 +34,8 @@ int main(void) {
  * Returns true if the results match.
  */
 bool testWithLength(int length) {
+  printf("Test length: %d\n", length);
+
   // Create (and clone) three vectors with the given length
   struct doubleVector a = random_vector(length);
   struct doubleVector b = random_vector(length);
@@ -40,14 +47,14 @@ bool testWithLength(int length) {
   
  
   // Test scalar performance 
-  printf("\nScalar cycle count: %d\n", perfTest(&a, &b, &c, scalar_fma));
+  printf("\tScalar cycle count: %d\n", perfTest(&a, &b, &c, scalar_fma));
  
   // Test vector performance
-  printf("\nVector cycle count: %d\n", perfTest(&a2, &b2, &c2, vector_fma));
+  printf("\tVector cycle count: %d\n", perfTest(&a2, &b2, &c2, vector_fma));
 
   // Compare results
-  char * correct = vector_compare(&a, &a2) ? "MATCH" : "NO MATCH";
-  printf("%s\n", correct);
+  bool correct = vector_compare(&a, &a2);
+  printf("\t%s\n", correct ? "MATCH" : "NO MATCH");
   
   // Free dynamic resources
   free(a.data);
@@ -60,7 +67,6 @@ bool testWithLength(int length) {
   return correct;
 }
 
-// This function prototype is the worst thing I have ever written
 int perfTest(struct doubleVector *a,
              const struct doubleVector *b,
              const struct doubleVector *c,
