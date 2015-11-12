@@ -63,12 +63,5 @@ bool vector_compare(const struct doubleVector * v1, const struct doubleVector * 
     return false;
   }
 
-  for(int i = 0; i < length; ++i) {
-    if (v1->data[i] != v2->data[i]) {
-      return false;
-    }
-  }
-
-  return true;
-  //return vectorized_compare(v1->data, v2->data, length);
+  return vectorized_compare(v1->data, v2->data, length);
 }
