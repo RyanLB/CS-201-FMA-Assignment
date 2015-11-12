@@ -37,3 +37,24 @@ To complete this assignment, you'll need to work on a processor that supports AV
 Included in the distribution code is a file called `vectors.s`. This file contains a couple of assembly routines which are used to copy and compare vectors of doubles. Looking at these may be helpful, as they contain usage examples of most – if not all – of the vector instructions you need.
 
 You may notice that the scalar implementation is also written in assembly, and uses the `vfmadd132sd` instruction. This is necessary because FMA instructions are [actually also more precise](https://en.wikipedia.org/wiki/Multiply–accumulate_operation) than a separate multiplication and addition, since we only need to round once. If you're attempting to debug your code in GDB or similar by checking its results against expressions like `a->data[0] + b->data[0] * c->data[0]`, you may notice minute differences in the smallest decimal digits; this is why.
+
+###Vector Instructions
+
+The two vector instructions described below are minimally sufficient to complete this assignment.
+
+####`vmovupd`
+
+`vmovupd`, or "Vector move unaligned packed doubles", is used to move multiple doubles at a time to or from floating-point registers. It is analogous to a regular `mov` instruction, and should therefore be pretty familiar. Examples of usage can be found in `vectors.c`.
+
+The number of doubles is determined by the size of the source/destination registers. If we `vmovupd` from memory to a 128-bit register such as `xmm0`, we'll move two doubles; if we `vmovupd` to a 256-bit `ymm` register, we'll move four doubles.
+
+####`vfmadd231pd`
+
+`vfmadd231pd` performs a fused multiply-add operation on packed doubles. The `231` refers to the fact that in Intel syntax, this multiplies together the second and third operands and adds the product to the first.
+
+Unfortunately, we're using AT&T syntax for our assembly, which means that our arguments are in the opposite order. Consider the following usage example:
+```
+vfmadd231pd %ymm0, %ymm1, %ymm2
+```
+
+This multiplies the packed doubles stored in `%ymm0` and `%ymm1`, and adds them to the packed doubles in `%ymm2`. Since in AT&T syntax, the destination comes last, the result is also stored in `%ymm2`.
