@@ -2,7 +2,7 @@
 
 This assignment requires you to write a function, using inline assembly, that takes three arbitrary-length vectors of double-precision floating point numbers `a`, `b`, and `c`, and perform the following operation:
 ```
-for(int i = 0, j = length; ++i) {
+for(int i = 0; i < length; ++i) {
   a[i] += b[i] * c[i];
 }
 ```
