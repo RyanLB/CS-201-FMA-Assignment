@@ -2,7 +2,7 @@
 
 This assignment requires you to write a function, using inline assembly, that takes three arbitrary-length vectors of double-precision floating point numbers `a`, `b`, and `c`, and perform the following operation:
 ```
-for(int i = 0, j = length; ++i) {
+for(int i = 0; i < length; ++i) {
   a[i] += b[i] * c[i];
 }
 ```
@@ -15,7 +15,7 @@ This repo provides skeleton code for creating random vectors and testing the per
 
 Your submission should be a single file with the title `submission.c`. This file should contain, at minimum, a function with the following signature:
 
-`bool vectorized_fma(const struct doubleVector * a, const struct doubleVector * b, const struct doubleVector * c)`
+`bool vector_fma(struct doubleVector * a, const struct doubleVector * b, const struct doubleVector * c)`
 
 This function should work with the provided `main.c` and `Makefile`; there is no need to write or include your own. The function also should not print output to the screen or take input from the user.
 
