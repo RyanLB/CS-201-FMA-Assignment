@@ -103,15 +103,16 @@ retFalse:
 
 .global scalar_fma_asm
 scalar_fma_asm:
+1:
   movsd (%rdi), %xmm0
   movsd (%rsi), %xmm1
   movsd (%rdx), %xmm2
-  vfmadd132sd %xmm1, %xmm0,  %xmm2
-  movsd %xmm2,  (%rdi)
+  vfmadd231sd %xmm1, %xmm2,  %xmm0
+  movsd %xmm0,  (%rdi)
   addq  $8, %rdi
   addq  $8, %rsi
   addq  $8, %rdx
-  loop scalar_fma_asm
+  loop 1b
 
 .globl rdtsc
 rdtsc:
