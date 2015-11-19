@@ -1,22 +1,22 @@
 .globl vectorized_copy
 vectorized_copy:
   cmpq  $4, %rdx
-  jl    above2
+  jl    2f
   
   movq  %rdx, %rcx
   shrq  $2,   %rcx
   leaq  (, %rcx, 4),  %rax
   subq  %rax, %rdx
-multsOf4:
+1:
   vmovupd  (%rdi), %ymm0
   vmovupd  %ymm0,  (%rsi)
   addq  $32,  %rdi
   addq  $32,  %rsi
-  loop  multsOf4
+  loop  1b
 
-above2:
+2:
   cmpq  $2, %rdx
-  jb    checkOdd
+  jb    3f
 
   movupd  (%rdi), %xmm0
   movupd  %xmm0,  (%rsi)
@@ -24,27 +24,27 @@ above2:
   addq  $16,  %rsi
 
   subq  $2, %rdx
-checkOdd:
+3:
   cmpq  $0, %rdx
-  je    done
+  je    4f
 
   movsd (%rdi), %xmm0
   movsd %xmm0,  (%rsi)
 
-done:
+4:
   ret
 
 
 .globl vectorized_compare
 vectorized_compare:
   cmpq  $4, %rdx
-  jl    cmpAbove2
+  jl    2f
   
   movq  %rdx, %rcx
   shrq  $2,   %rcx
   leaq  (, %rcx, 4),  %rax
   subq  %rax, %rdx
-cmpMultsOf4:
+1:
   # Move four doubles from v1 and four doubles from v2 into %ymm0 and %ymm1, respectively
   vmovupd  (%rdi),  %ymm0
   vmovupd  (%rsi),  %ymm1
@@ -57,16 +57,16 @@ cmpMultsOf4:
   # that they are all set
   vmovmskpd %ymm2,  %rax
   cmpq  $15,  %rax
-  jne   retFalse
+  jne   5f
 
   # Increment pointers appropriately
   addq  $32,  %rdi
   addq  $32,  %rsi
-  loop  multsOf4
+  loop  1b
 
-cmpAbove2:
+2:
   cmpq  $2, %rdx
-  jb    checkOdd
+  jb    3f
 
   vmovupd (%rdi), %xmm0
   vmovupd (%rsi), %xmm1
@@ -75,29 +75,29 @@ cmpAbove2:
 
   vmovmskpd %xmm2,  %rax
   cmpq  $3, %rax
-  jne   retFalse
+  jne   5f
 
   addq  $16,  %rdi
   addq  $16,  %rsi
 
   subq  $2, %rdx
-cmpCheckOdd:
+3:
   cmpq  $0, %rdx
-  je    retTrue
+  je    4f
 
   movsd (%rdi), %xmm0
   cmpsd $0, (%rsi), %xmm0
   movmskpd  %xmm0,  %rax
   andq  $1, %rax
   cmpq  $1, %rax
-  jne   retFalse
+  jne   5f
 
   # If we got this far, return true
-retTrue:
+4:
   movq  $1, %rax
   ret
 
-retFalse:
+5:
   movq  $0, %rax
   ret
 
